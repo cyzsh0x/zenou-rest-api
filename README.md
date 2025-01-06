@@ -39,12 +39,12 @@ To set up the framework locally:
 
 1. **Clone the Repository**:  
    ```bash  
-   git clone https://github.com/ajirodesu/ajiro-rest-api.git  
+   git clone https://github.com/ajirodesu/zenou-rest-api.git  
    ```  
 
 2. **Navigate to the Project Directory**:  
    ```bash  
-   cd ajiro-rest-api  
+   cd zenou-rest-api  
    ```  
 
 3. **Install Dependencies**:  
@@ -68,7 +68,6 @@ To add a new API endpoint, create a JavaScript file in the `api` directory with 
 ```javascript  
 exports.config = {  
     name: 'example', // The name of your API  
-    author: 'Your_Name', // Your name or alias  
     description: 'API Description', // Brief description of your API  
     category: 'utility', // The category of your API (e.g., utility, data, etc.)  
     link: ['/example?q=test'] // Example link to access your API  
