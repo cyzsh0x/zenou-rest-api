@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Dashboard Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Memphis:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        blue: {"500":"#3b82f6"},
+                        gray: {
+                            "800": "#1f2937",
+                            "900": "#111827"
+                        },
+                        "deep-blue": "#0f172a",
+                        "gradient-start": "#4f46e5",
+                        "gradient-end": "#7c3aed"
+                    },
+                    fontFamily: {
+                        'sans': ['Memphis', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Memphis', sans-serif;
+            background-color: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #4b5563;
+            border-radius: 20px;
+        }
+        .capitalize {
+            text-transform: capitalize;
+        }
+        .break-all {
+            word-break: break-all;
+        }
+        .bg-deep-blue {
+            background-color: #0f172a;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .loading-pulse {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-scale {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+        .animate-pulse-scale {
+            animation: pulse-scale 2s ease-in-out infinite;
+        }
+        @keyframes slideDown {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(180deg); }
+        }
+        @keyframes slideUp {
+            0% { transform: rotate(180deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .slide-down {
+            animation: slideDown 0.3s ease-in-out forwards;
+        }
+        .slide-up {
+            animation: slideUp 0.3s ease-in-out forwards;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Memphis', sans-serif;
+        }
+        .memphis-heading {
+            font-family: 'Memphis', sans-serif;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-deep-blue text-gray-300">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-80 transform overflow-y-auto bg-gray-900 transition-all duration-300 ease-in-out -translate-x-full md:relative md:translate-x-0 border-r border-gray-800">
+            <div class="flex h-full flex-col">
+                <div class="flex flex-col">
+                    <div class="flex items-center justify-between p-4 h-16">
+                        <h2 id="sidebarTitle" class="text-sm font-medium text-white flex items-center memphis-heading">
+                            <img src="https://i.ibb.co/XYk4dXn/image.png" alt="API" class="w-5 h-5 mr-2" />
+                            <span id="sidebarTitleText" class="gradient-text">API Dashboard Pro</span>
+                        </h2>
+                    </div>
+                    <div class="h-[1px] bg-gray-800 w-full"></div>
+                </div>
+                <div class="px-4 py-4">
+                    <div class="relative">
+                        <input
+                            type="search"
+                            id="apiSearch"
+                            placeholder="Search APIs..."
+                            class="w-full px-4 py-2 text-sm text-gray-300 bg-gray-800 rounded-md focus:outline-none focus:ring-1 focus:ring-gradient-start pl-9"
+                        />
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-2.5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+                <nav id="sidebarNav" class="flex-1 space-y-1 px-3 py-3 custom-scrollbar">
+                    <!-- API categories and endpoints will be dynamically inserted here -->
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="relative flex flex-1 flex-col overflow-y-auto bg-deep-blue">
+            <!-- Header -->
+            <header class="sticky top-0 z-40 bg-gray-900">
+                <div class="container mx-auto">
+                    <div class="flex flex-col">
+                        <div class="flex h-16 items-center justify-between px-4">
+                            <button id="toggleSidebar" class="md:hidden text-gray-400 hover:text-white focus:outline-none focus:ring-1 focus:ring-gradient-start p-2 rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16" />
+                                </svg>
+                            </button>
+                            <div id="greeting" class="text-sm font-medium text-gray-200 gradient-text"></div>
+                            <button id="showNotifications" class="text-gray-400 hover:text-white focus:outline-none focus:ring-1 focus:ring-gradient-start p-2 rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="h-[1px] bg-gray-800 w-full"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main content -->
+            <main id="mainContent" class="flex-1 px-4 py-4 bg-deep-blue">
+                <div class="max-w-7xl mx-auto space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-900 rounded-lg border border-gradient-start px-4 py-3 flex flex-col items-center justify-center h-32">
+                            <div class="gradient-text mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium text-gray-400 mb-1 memphis-heading">Total Endpoints</h3>
+                            <p id="totalEndpoints" class="text-2xl font-semibold text-white loading-pulse gradient-text">--</p>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg border border-gradient-start px-4 py-3 flex flex-col items-center justify-center h-32">
+                            <div class="gradient-text mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium text-gray-400 mb-1 memphis-heading">Total Categories</h3>
+                            <p id="totalCategories" class="text-2xl font-semibold text-white loading-pulse gradient-text">--</p>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg border border-gradient-start px-4 py-3 flex flex-col items-center justify-center h-32">
+                            <div class="gradient-text mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium text-gray-400 mb-1 memphis-heading">Battery</h3>
+                            <p class="text-2xl font-semibold text-white loading-pulse gradient-text" id="batteryLevel">--</p>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg border border-gradient-start px-4 py-3 flex flex-col items-center justify-center h-32">
+                            <div class="gradient-text mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium text-gray-400 mb-1 memphis-heading">Current Date</h3>
+                            <p class="text-2xl font-semibold text-white loading-pulse gradient-text" id="currentDate">--</p>
+                        </div>
+
+                        <div class="bg-gray-900 rounded-lg border border-gradient-start px-4 py-3 flex flex-col items-center justify-center h-32">
+                            <div class="gradient-text mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-medium text-gray-400 mb-1 memphis-heading">Current Time</h3>
+                            <p class="text-2xl font-semibold text-white loading-pulse gradient-text" id="currentTime">--</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Welcome Popup -->
+    <div id="welcomePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-gray-900 rounded-lg border border-gray-800 p-6 max-w-md w-full mx-4">
+            <h2 id="welcomeTitle" class="text-2xl font-bold gradient-text mb-4 memphis-heading">Welcome to API Dashboard Pro!</h2>
+            <p class="text-gray-300 mb-6">Get started by exploring our API categories and endpoints. Use the search function to find specific APIs quickly.</p>
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 gradient-text mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <p class="text-gray-300">Browse API categories in the sidebar</p>
+                </div>
+                <div class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 gradient-text mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <p class="text-gray-300">Click on endpoints to view details and access links</p>
+                </div>
+                <div class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 gradient-text mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <p class="text-gray-300">Use the search bar to find specific APIs</p>
+                </div>
+            </div>
+            <button id="closeWelcomePopup" class="mt-6 w-full gradient-bg text-white py-2 px-4 rounded-md hover:opacity-90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-gradient-start focus:ring-opacity-50 transform hover:scale-105 memphis-heading">
+                Get Started
+            </button>
+        </div>
+    </div>
+
+    <script>
+    // Fetch API list
+    let apiList = [];
+    let openCategoryDiv = null;
+    let openEndpointDiv = null;
+
+    async function fetchApiList() {
+        try {
+            const response = await fetch('/api-list');
+            const data = await response.json();
+            apiList = data.apis;
+            updateDashboard();
+        } catch (error) {
+            console.error('Error fetching API list:', error);
+        }
+    }
+
+    function updateDashboard() {
+        const totalEndpoints = apiList.length;
+        const categories = new Set(apiList.map(api => api.category));
+        const totalCategories = categories.size;
+
+        const totalEndpointsEl = document.getElementById('totalEndpoints');
+        const totalCategoriesEl = document.getElementById('totalCategories');
+
+        totalEndpointsEl.textContent = totalEndpoints;
+        totalCategoriesEl.textContent = totalCategories;
+
+        // Remove loading animations
+        totalEndpointsEl.classList.remove('loading-pulse');
+        totalCategoriesEl.classList.remove('loading-pulse');
+
+        renderCategories(apiList);
+    }
+
+    function createEndpointElement(endpoint) {
+        const endpointDiv = document.createElement('div');
+        endpointDiv.className = 'rounded-md mb-1';
+
+        const endpointButton = document.createElement('button');
+        endpointButton.className = 'flex w-full items-center justify-between px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 transition-colors duration-200 ease-in-out rounded-md focus:outline-none focus:ring-1 focus:ring-gradient-start';
+        endpointButton.innerHTML = `
+            <span class="capitalize">${endpoint.name}</span>
+            <span class="bg-gray-800 text-gray-300 text-xs px-2 py-0.5 rounded">GET</span>
+        `;
+
+        const endpointDetails = document.createElement('div');
+        endpointDetails.className = 'mt-2 px-3 py-2 text-xs text-gray-400 bg-gray-800 rounded-md hidden';
+        endpointDetails.innerHTML = `
+            <p class="mb-2"><strong class="text-gray-200">Endpoint:</strong> <span class="break-all">${endpoint.endpoint}</span></p>
+            <p class="mb-3"><strong class="text-gray-200">Description:</strong> ${endpoint.description}</p>
+            <a href="${endpoint.endpoint}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center w-full px-3 py-1.5 text-sm font-medium text-white gradient-bg rounded-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gradient-start transition-colors duration-200 ease-in-out">
+                Access API
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                    <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                </svg>
+            </a>
+        `;
+
+        endpointButton.addEventListener('click', () => {
+            if (openEndpointDiv && openEndpointDiv !== endpointDetails) {
+                openEndpointDiv.classList.add('hidden');
+            }
+            endpointDetails.classList.toggle('hidden');
+            openEndpointDiv = endpointDetails.classList.contains('hidden') ? null : endpointDetails;
+        });
+
+        endpointDiv.appendChild(endpointButton);
+        endpointDiv.appendChild(endpointDetails);
+        return endpointDiv;
+    }
+
+    function renderCategories(apis) {
+        const sidebarNav = document.getElementById('sidebarNav');
+        sidebarNav.innerHTML = '';
+
+        const categories = {};
+        apis.forEach(api => {
+            if (!categories[api.category]) {
+                categories[api.category] = [];
+            }
+            categories[api.category].push(api);
+        });
+
+        Object.entries(categories).forEach(([category, endpoints]) => {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'mb-1';
+
+            const categoryButton = document.createElement('button');
+            categoryButton.className = 'flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium text-gray-300 transition-colors duration-200 ease-in-out hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-gradient-start';
+            categoryButton.innerHTML = `
+                <span class="capitalize">${category}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            `;
+
+            const endpointsDiv = document.createElement('div');
+            endpointsDiv.className = 'mt-1 space-y-1 pl-3 hidden';
+
+            endpoints.forEach(endpoint => {
+                endpointsDiv.appendChild(createEndpointElement(endpoint));
+            });
+
+            categoryButton.addEventListener('click', () => {
+                if (openCategoryDiv && openCategoryDiv !== endpointsDiv) {
+                    openCategoryDiv.classList.add('hidden');
+                    openCategoryDiv.previousElementSibling.querySelector('svg').classList.remove('slide-down');
+                    openCategoryDiv.previousElementSibling.querySelector('svg').classList.add('slide-up');
+                }
+                endpointsDiv.classList.toggle('hidden');
+                const arrow = categoryButton.querySelector('svg');
+                if (endpointsDiv.classList.contains('hidden')) {
+                    arrow.classList.remove('slide-down');
+                    arrow.classList.add('slide-up');
+                } else {
+                    arrow.classList.remove('slide-up');
+                    arrow.classList.add('slide-down');
+                }
+                openCategoryDiv = endpointsDiv.classList.contains('hidden') ? null : endpointsDiv;
+            });
+
+            categoryDiv.appendChild(categoryButton);
+            categoryDiv.appendChild(endpointsDiv);
+            sidebarNav.appendChild(categoryDiv);
+        });
+    }
+
+    function filterApis(searchTerm) {
+        return apiList.filter(api =>
+            api.name.toLowerCase().includes(searchTerm) ||
+            api.description.toLowerCase().includes(searchTerm) ||
+            api.category.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    const searchInput = document.getElementById('apiSearch');
+    searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredApis = filterApis(searchTerm);
+        renderCategories(filteredApis);
+
+        if (searchTerm) {
+            document.querySelectorAll('#sidebarNav > div').forEach(categoryDiv => {
+                const endpointsDiv = categoryDiv.querySelector('div:last-child');
+                const hasMatch = Array.from(endpointsDiv.children).some(child => 
+                    child.textContent.toLowerCase().includes(searchTerm)
+                );
+                if (hasMatch) {
+                    endpointsDiv.classList.remove('hidden');
+                    const arrow = categoryDiv.querySelector('button svg');
+                    arrow.classList.remove('slide-up');
+                    arrow.classList.add('slide-down');
+                }
+            });
+        }
+    });
+
+    // Initial fetch and render
+    fetchApiList();
+
+    // Dynamic greeting
+    const greetingElement = document.getElementById('greeting');
+
+    function getGreeting() {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good Morning";
+        if (hour < 18) return "Good Afternoon";
+        if (hour < 22) return "Good Evening";
+        return "Good Night";
+    }
+
+    function updateGreeting() {
+        greetingElement.textContent = getGreeting();
+    }
+
+    updateGreeting();
+    setInterval(updateGreeting, 60000);
+
+    // Notifications functionality
+    const showNotificationsBtn = document.getElementById('showNotifications');
+    const mainContent = document.getElementById('mainContent');
+
+    let notifications = [];
+
+    showNotificationsBtn.addEventListener('click', () => {
+        const notificationsHTML = `
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-gray-900 rounded-xl shadow-lg overflow-hidden border border-gradient-start">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-bold gradient-text memphis-heading">Notifications</h2>
+                            <button id="closeNotifications" class="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-gradient-start p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        ${notifications.map((notification, index) => `
+                            <div class="py-4 ${index !== 0 ? 'border-t border-gray-800' : ''}">
+                                <h3 class="text-lg font-semibold gradient-text mb-2 memphis-heading">${notification.title}</h3>
+                                <p class="text-gray-400">${notification.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        mainContent.innerHTML = notificationsHTML;
+
+        const closeNotificationsBtn = document.getElementById('closeNotifications');
+        closeNotificationsBtn.addEventListener('click', () => {
+            location.reload();
+        });
+    });
+
+    // Sidebar functionality
+    const sidebar = document.getElementById('sidebar');
+    const toggleSidebarBtn = document.getElementById('toggleSidebar');
+
+    function closeAllCategories() {
+        if (openCategoryDiv) {
+            openCategoryDiv.classList.add('hidden');
+            const arrow = openCategoryDiv.previousElementSibling.querySelector('svg');
+            arrow.classList.remove('slide-down');
+            arrow.classList.add('slide-up');
+            openCategoryDiv = null;
+        }
+        if (openEndpointDiv) {
+            openEndpointDiv.classList.add('hidden');
+            openEndpointDiv = null;
+        }
+    }
+
+    toggleSidebarBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('-translate-x-full');
+        if (sidebar.classList.contains('-translate-x-full')) {
+            closeAllCategories();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !toggleSidebarBtn.contains(e.target)) {
+            sidebar.classList.add('-translate-x-full');
+            closeAllCategories();
+        }
+    });
+
+    // Battery and time functions
+    function updateBatteryLevel() {
+        const batteryEl = document.getElementById('batteryLevel');
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(function(battery) {
+                const level = Math.round(battery.level * 100);
+                batteryEl.textContent = `${level}%`;
+                batteryEl.classList.remove('loading-pulse');
+            });
+        } else {
+            batteryEl.textContent = 'Not available';
+            batteryEl.classList.remove('loading-pulse');
+        }
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const timeOptions = { hour:'2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+
+        const dateEl = document.getElementById('currentDate');
+        const timeEl = document.getElementById('currentTime');
+
+        dateEl.textContent = now.toLocaleDateString('en-CA', dateOptions).replace(/\//g, '-');
+        timeEl.textContent = now.toLocaleTimeString('en-GB', timeOptions);
+
+        dateEl.classList.remove('loading-pulse');
+        timeEl.classList.remove('loading-pulse');
+    }
+
+    // Initial calls
+    updateBatteryLevel();
+    updateDateTime();
+
+    // Update every second
+    setInterval(updateDateTime, 1000);
+
+    // Update battery every minute
+    setInterval(updateBatteryLevel, 60000);
+
+    // Welcome popup functionality
+    function showWelcomePopup() {
+        const welcomePopup = document.getElementById('welcomePopup');
+        const closeWelcomePopupBtn = document.getElementById('closeWelcomePopup');
+        const isHomePage = window.location.pathname === '/docs' || window.location.pathname === '/docs.html';
+
+        if (isHomePage && !localStorage.getItem('welcomePopupShown')) {
+            welcomePopup.classList.remove('hidden');
+            closeWelcomePopupBtn.classList.add('animate-pulse-scale');
+
+            closeWelcomePopupBtn.addEventListener('click', () => {
+                closeWelcomePopupBtn.classList.remove('animate-pulse-scale');
+                welcomePopup.classList.add('hidden');
+                localStorage.setItem('welcomePopupShown', 'true');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', showWelcomePopup);
+
+    async function fetchConfig() {
+        if (window.appConfig) {
+            return window.appConfig;
+        }
+        try {
+            const response = await fetch('/api-list');
+            const data = await response.json();
+            return data.config;
+        } catch(error) {
+            console.error('Error fetching config:', error);
+            return {};
+        }
+    }
+
+    async function updateDynamicContent() {
+        const config = await fetchConfig();
+
+        // Update document title
+        document.title = config.title || 'API Dashboard Pro';
+
+        // Update sidebar title
+        document.getElementById('sidebarTitleText').textContent = config.title || 'API Dashboard Pro';
+
+        // Update welcome popup title
+        document.getElementById('welcomeTitle').textContent = `Welcome to ${config.title || 'API Dashboard Pro'}!`;
+
+        // Update notifications
+        notifications = config.notifications || [];
+
+        // Update favicon if provided in config
+        if (config.favicon) {
+            const favicon = document.querySelector('link[rel="icon"]');
+            if (favicon) {
+                favicon.href = config.favicon;
+            } else {
+                const newFavicon = document.createElement('link');
+                newFavicon.rel = 'icon';
+                newFavicon.href = config.favicon;
+                document.head.appendChild(newFavicon);
+            }
+        }
+    }
+
+    updateDynamicContent();
+    </script>
+</body>
+</html>

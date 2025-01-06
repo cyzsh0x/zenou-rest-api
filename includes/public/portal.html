@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rest API Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://i.ibb.co/XYk4dXn/image.png">
+    <style>
+        body { 
+            background: #000;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.15), transparent 70%);
+            will-change: transform;
+            transform-origin: center center;
+        }
+
+        @keyframes circle1 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 100px) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        @keyframes circle2 {
+            0% { transform: translate(0, 0) scale(0.9); }
+            50% { transform: translate(-100px, 100px) scale(1); }
+            100% { transform: translate(0, 0) scale(0.9); }
+        }
+
+        @keyframes circle3 {
+            0% { transform: translate(0, 0) scale(1.1); }
+            50% { transform: translate(50px, -100px) scale(1); }
+            100% { transform: translate(0, 0) scale(1.1); }
+        }
+
+        @keyframes circle4 {
+            0% { transform: translate(0, 0) scale(0.8); }
+            50% { transform: translate(-50px, -50px) scale(1); }
+            100% { transform: translate(0, 0) scale(0.8); }
+        }
+
+        .circle:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            top: -100px;
+            left: -100px;
+            animation: circle1 20s infinite ease-in-out;
+        }
+
+        .circle:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            bottom: -100px;
+            right: -100px;
+            animation: circle2 25s infinite ease-in-out;
+        }
+
+        .circle:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: 60%;
+            animation: circle3 22s infinite ease-in-out;
+        }
+
+        .circle:nth-child(4) {
+            width: 300px;
+            height: 300px;
+            top: 30%;
+            left: 20%;
+            animation: circle4 28s infinite ease-in-out;
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(6, 182, 212, 0.5);
+            border-radius: 50%;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--moveX), var(--moveY));
+                opacity: 0;
+            }
+        }
+
+        .portal-button {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+
+        .portal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+        }
+
+        .portal-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.2), transparent);
+            transition: transform 0.5s ease;
+            will-change: transform;
+        }
+
+        .portal-button:hover::before {
+            transform: translateX(200%);
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+    <div class="animated-bg">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <div class="z-10 text-center px-4 sm:px-6 max-w-3xl mx-auto">
+        <img src="https://i.ibb.co/XYk4dXn/image.png" alt="AjiroDesu Logo" 
+             class="w-24 h-24 mx-auto mb-8 floating">
+
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            <script>document.write(window.appConfig.title2);</script>
+        </h1>
+
+        <p class="text-lg sm:text-xl text-gray-400 mb-12">
+            Free REST API for your bot and other projects.
+        </p>
+
+        <a href="/docs" 
+           class="portal-button inline-flex items-center justify-center px-8 py-4 text-lg font-medium text-white bg-transparent border-2 border-cyan-500 rounded-lg">
+            <span class="relative z-10">Enter Portal</span>
+        </a>
+    </div>
+
+    <div class="absolute bottom-8 text-center z-10">
+        <p class="text-gray-500 text-sm">
+            Developed by 
+            <a href="https://facebook.com/lance.cochangco" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               class="text-cyan-400 hover:text-cyan-300 transition-colors">
+                AjiroDesu
+            </a>
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const particleContainer = document.querySelector('.animated-bg');
+            const maxParticles = 30;
+            let particleCount = 0;
+
+            function createParticle() {
+                if (particleCount >= maxParticles) return;
+
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                // Random starting position
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight;
+
+                // Random movement distance
+                const moveX = (Math.random() - 0.5) * 200;
+                const moveY = (Math.random() - 0.5) * 200;
+
+                particle.style.left = startX + 'px';
+                particle.style.top = startY + 'px';
+                particle.style.setProperty('--moveX', moveX + 'px');
+                particle.style.setProperty('--moveY', moveY + 'px');
+
+                particle.style.animation = `particleFloat ${5 + Math.random() * 5}s ease-out forwards`;
+
+                particleContainer.appendChild(particle);
+                particleCount++;
+
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                    particleCount--;
+                });
+            }
+
+            // Create particles at a controlled rate
+            setInterval(createParticle, 200);
+        });
+    </script>
+</body>
+</html>
+

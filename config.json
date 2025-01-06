@@ -1,0 +1,17 @@
+{
+  "port": "8080",
+  "title": "Zenou API",
+  "title2": "Zenou Rest API",
+  "author": "CodeZenou",
+  "favicon": "https://i.ibb.co/XYk4dXn/image.png",
+  "notifications": [
+    {
+      "title": "New UI",
+      "description": "We updated our UI to get cooler experience"
+    },
+    {
+      "title": "New Design",
+      "description": "We updated our design to get cooler experience"
+    }
+  ]
+}
