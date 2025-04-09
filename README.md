@@ -39,7 +39,7 @@ To set up the framework locally:
 
 1. **Clone the Repository**:  
    ```bash  
-   git clone https://github.com/ajirodesu/zenou-rest-api.git  
+   git clone https://github.com/cyzsh0x/zenou-rest-api.git  
    ```  
 
 2. **Navigate to the Project Directory**:  
