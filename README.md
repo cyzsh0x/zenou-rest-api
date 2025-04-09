@@ -117,8 +117,8 @@ The framework includes a `config.json` file to make it easier to customize key s
 ```json  
 {  
   "port": "8080",  
-  "title": "Ajiro API",  
-  "title2": "Ajiro Rest API",  
+  "title": "CyZsh0x API",  
+  "title2": "CyZsh0x Rest API",  
   "favicon": "https://i.ibb.co/XYk4dXn/image.png",  
   "notifications": [  
     {  
